@@ -1,22 +1,13 @@
 package com.example.intern.entity;
 
 import com.example.intern.enums.TaskStatus;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "tasks")
 public class Task {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -34,24 +25,31 @@ public class Task {
     private LocalDate dueDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "assigned_to_id")
+    @JoinColumn(name = "assigned_to")
     private User assignedTo;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "created_by_id")
-    private User createdBy;
+    @JoinColumn(name = "assigned_by")
+    private User assignedBy;
 
     public Task() {
     }
 
-    public Task(Long id, String title, String description, TaskStatus status, LocalDate dueDate, User assignedTo, User createdBy) {
+    public Task(Long id,
+                String title,
+                String description,
+                TaskStatus status,
+                LocalDate dueDate,
+                User assignedTo,
+                User assignedBy) {
+
         this.id = id;
         this.title = title;
         this.description = description;
         this.status = status;
         this.dueDate = dueDate;
         this.assignedTo = assignedTo;
-        this.createdBy = createdBy;
+        this.assignedBy = assignedBy;
     }
 
     public Long getId() {
@@ -102,11 +100,11 @@ public class Task {
         this.assignedTo = assignedTo;
     }
 
-    public User getCreatedBy() {
-        return createdBy;
+    public User getAssignedBy() {
+        return assignedBy;
     }
 
-    public void setCreatedBy(User createdBy) {
-        this.createdBy = createdBy;
+    public void setAssignedBy(User assignedBy) {
+        this.assignedBy = assignedBy;
     }
 }

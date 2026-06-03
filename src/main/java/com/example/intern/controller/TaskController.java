@@ -48,11 +48,13 @@ public class TaskController {
         return taskService.createTask(taskDTO);
     }
 
-    @PutMapping("/{id}")
-    public TaskDTO updateTask(@PathVariable Long id, @RequestBody TaskDTO taskDTO) {
-        return taskService.updateTask(id, taskDTO);
-    }
+    @PutMapping("/{id}/status")
+    public TaskDTO updateStatus(
+            @PathVariable Long id,
+            @RequestParam TaskStatus status) {
 
+        return taskService.updateStatus(id, status);
+    }
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteTask(@PathVariable Long id) {

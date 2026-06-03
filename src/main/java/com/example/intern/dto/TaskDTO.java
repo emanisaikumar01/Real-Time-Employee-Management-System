@@ -4,15 +4,18 @@ import com.example.intern.enums.TaskStatus;
 import java.time.LocalDate;
 
 public class TaskDTO {
+
     private Long id;
     private String title;
     private String description;
     private TaskStatus status;
     private LocalDate dueDate;
+
     private Long assignedToId;
     private String assignedToName;
-    private Long createdById;
-    private String createdByName;
+
+    private Long assignedById;
+    private String assignedByName;
 
     public TaskDTO() {
     }
@@ -73,19 +76,19 @@ public class TaskDTO {
         this.assignedToName = assignedToName;
     }
 
-    public Long getCreatedById() {
-        return createdById;
+    public Long getAssignedById() {
+        return assignedById;
     }
 
-    public void setCreatedById(Long createdById) {
-        this.createdById = createdById;
+    public void setAssignedById(Long assignedById) {
+        this.assignedById = assignedById;
     }
 
-    public String getCreatedByName() {
-        return createdByName;
+    public String getAssignedByName() {
+        return assignedByName;
     }
 
-    public void setCreatedByName(String createdByName) {
-        this.createdByName = createdByName;
+    public void setAssignedByName(String assignedByName) {
+        this.assignedByName = assignedByName;
     }
 }

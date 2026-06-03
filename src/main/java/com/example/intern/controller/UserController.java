@@ -1,4 +1,5 @@
 package com.example.intern.controller;
+import com.example.intern.dto.LoginRequest;
 
 import com.example.intern.dto.UserDTO;
 import com.example.intern.service.UserService;
@@ -33,12 +34,14 @@ public class UserController {
         return userService.getUserById(id);
     }
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public UserDTO createUser(@RequestBody UserDTO userDTO) {
-        return userService.createUser(userDTO);
-    }
+    @PostMapping("/login")
+    public UserDTO login(@RequestBody LoginRequest request) {
 
+        return userService.login(
+                request.getEmail(),
+                request.getPassword()
+        );
+    }
     @PutMapping("/{id}")
     public UserDTO updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
         return userService.updateUser(id, userDTO);
@@ -48,5 +51,10 @@ public class UserController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
+    }
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public UserDTO createUser(@RequestBody UserDTO userDTO) {
+        return userService.createUser(userDTO);
     }
 }

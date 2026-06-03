@@ -4,25 +4,30 @@ import com.example.intern.dto.UserDTO;
 import com.example.intern.entity.Department;
 import com.example.intern.entity.Role;
 import com.example.intern.entity.User;
+import com.example.intern.entity.Task;
 import com.example.intern.exception.UserNotFoundException;
 import com.example.intern.repository.DepartmentRepository;
 import com.example.intern.repository.RoleRepository;
+import com.example.intern.repository.TaskRepository;
 import com.example.intern.repository.UserRepository;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+
 @Service
 public class UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final DepartmentRepository departmentRepository;
+    private final TaskRepository taskRepository;
 
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, DepartmentRepository departmentRepository) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, DepartmentRepository departmentRepository, TaskRepository taskRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.departmentRepository = departmentRepository;
+        this.taskRepository = taskRepository;
     }
 
     public List<UserDTO> getAllUsers() {
@@ -46,7 +51,25 @@ public class UserService {
     }
 
     public void deleteUser(Long id) {
-        userRepository.delete(findUser(id));
+
+        User user = findUser(id);
+
+        List<Task> tasks = taskRepository.findAll();
+
+        for (Task task : tasks) {
+
+            if (
+                    (task.getAssignedTo() != null &&
+                            task.getAssignedTo().getId().equals(id))
+                            ||
+                            (task.getAssignedBy() != null &&
+                                    task.getAssignedBy().getId().equals(id))
+            ) {
+                taskRepository.delete(task);
+            }
+        }
+
+        userRepository.delete(user);
     }
 
     public User findUser(Long id) {
@@ -74,17 +97,28 @@ public class UserService {
     private Department findDepartment(Long id) {
         if (id == null) {
             return null;
+
         }
         return departmentRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Department not found with id: " + id));
     }
+    public UserDTO login(String email, String password) {
 
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (!user.getPassword().equals(password)) {
+            throw new RuntimeException("Invalid password");
+        }
+
+        return toDTO(user);
+    }
     private UserDTO toDTO(User user) {
         UserDTO dto = new UserDTO();
         dto.setId(user.getId());
         dto.setName(user.getName());
         dto.setEmail(user.getEmail());
-        dto.setPassword(user.getPassword());
+        dto.setPassword(null);
         if (user.getRole() != null) {
             dto.setRoleId(user.getRole().getId());
             dto.setRoleName(user.getRole().getRoleName());
