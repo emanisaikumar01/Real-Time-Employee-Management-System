@@ -9,3 +9,10 @@ export async function getDashboardStats() {
   const response = await api.get("/dashboard");
   return response.data;
 }
+export async function getEmployeeDashboard(userId) {
+  const response = await api.get(
+      `/dashboard/employee/${userId}`
+  );
+
+  return response.data;
+}

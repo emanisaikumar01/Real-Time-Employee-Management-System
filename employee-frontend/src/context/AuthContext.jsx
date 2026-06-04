@@ -41,6 +41,8 @@ function AuthProvider({ children }) {
             setUser(data);
         },
       logout() {
+          localStorage.removeItem("employee_token");
+          localStorage.removeItem("employee_user");
         setToken(null);
         setUser(null);
       },

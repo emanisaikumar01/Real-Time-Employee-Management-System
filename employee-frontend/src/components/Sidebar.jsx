@@ -1,83 +1,94 @@
 import logo from "../assets/logo.png";
+import { useAuth } from "../hooks/useAuth";
 
 function Sidebar({ currentPath, onNavigate }) {
 
-    const user = JSON.parse(
-        localStorage.getItem("employee_user")
-    );
+    const { user } = useAuth();
 
     const role = user?.roleName;
 
-    let navItems = [
-        {
-            label: "Dashboard",
-            path: "/",
-        },
-    ];
+    let navItems = [];
 
-    if (role === "CEO") {
-        navItems = [
-            { label: "Dashboard", path: "/" },
-            { label: "Users", path: "/users" },
-            { label: "Departments", path: "/departments" },
-            { label: "Tasks", path: "/tasks" },
-            { label: "Reports", path: "/reports" },
-            {
-                label: "Leave Requests",
-                path: "/leave-requests",
-            },
-        ];
-    }
+    switch (role) {
 
-    else if (role === "MANAGER") {
-        navItems = [
-            { label: "Dashboard", path: "/" },
-            { label: "Users", path: "/users" },
-            { label: "Tasks", path: "/tasks" },
-            { label: "Reports", path: "/reports" },
-            {
-                label: "Leave Requests",
-                path: "/leave-requests",
-            },
-        ];
-    }
+        case "CEO":
+            navItems = [
+                { label: "Dashboard", path: "/" },
+                { label: "Users", path: "/users" },
+                { label: "Departments", path: "/departments" },
+                { label: "Tasks", path: "/tasks" },
+                { label: "Reports", path: "/reports" },
+                { label: "Leave Requests", path: "/leave-requests" },
+                { label: "Notice Board", path: "/notices" },
+                { label: "Meetings", path: "/meetings" },
+            ];
+            break;
 
-    else if (role === "DIVISIONAL_HEAD") {
-        navItems = [
-            { label: "Dashboard", path: "/" },
-            { label: "Tasks", path: "/tasks" },
-            { label: "Reports", path: "/reports" },
-            {
-                label: "Leave Requests",
-                path: "/leave-requests",
-            },
-        ];
-    }
+        case "HR":
+            navItems = [
+                { label: "Dashboard", path: "/" },
+                { label: "Users", path: "/users" },
+                { label: "Reports", path: "/reports" },
+                { label: "Leave Requests", path: "/leave-requests" },
+                { label: "Notice Board", path: "/notices" },
+                { label: "Meetings", path: "/meetings" },
+            ];
+            break;
 
-    else if (role === "EXECUTIVE") {
-        navItems = [
-            { label: "Dashboard", path: "/" },
-            { label: "Tasks", path: "/tasks" },
-            { label: "Reports", path: "/reports" },
-        ];
-    }
+        case "DIVISIONAL_HEAD":
+            navItems = [
+                { label: "Dashboard", path: "/" },
+                { label: "Users", path: "/users" },
+                { label: "Tasks", path: "/tasks" },
+                { label: "Reports", path: "/reports" },
+                { label: "Leave Requests", path: "/leave-requests" },
+                { label: "Meetings", path: "/meetings" },
+                { label: "Notice Board", path: "/notices" },
+            ];
+            break;
 
-    else if (role === "EMPLOYEE") {
-        navItems = [
-            { label: "Dashboard", path: "/" },
-            { label: "Tasks", path: "/tasks" },
-            {
-                label: "Leave Requests",
-                path: "/leave-requests",
-            },
-        ];
+        case "MANAGER":
+            navItems = [
+                { label: "Dashboard", path: "/" },
+                { label: "Tasks", path: "/tasks" },
+                { label: "Reports", path: "/reports" },
+                { label: "Leave Requests", path: "/leave-requests" },
+                { label: "Meetings", path: "/meetings" },
+                { label: "Notice Board", path: "/notices" },
+            ];
+            break;
+
+        case "EXECUTIVE":
+            navItems = [
+                { label: "Dashboard", path: "/" },
+                { label: "Tasks", path: "/tasks" },
+                { label: "Leave Requests", path: "/leave-requests" },
+                { label: "Meetings", path: "/meetings" },
+                { label: "Notice Board", path: "/notices" },
+            ];
+            break;
+
+        case "EMPLOYEE":
+            navItems = [
+                { label: "Dashboard", path: "/" },
+                { label: "Tasks", path: "/tasks" },
+                { label: "Leave Requests", path: "/leave-requests" },
+                { label: "Meetings", path: "/meetings" },
+                { label: "Notice Board", path: "/notices" },
+            ];
+            break;
+
+        default:
+            navItems = [
+                { label: "Dashboard", path: "/" },
+            ];
     }
 
     return (
         <aside className="sidebar">
             <div className="brand">
                 <img src={logo} alt="EMS" />
-                <span> Welcome</span>
+                <span>Welcome</span>
             </div>
 
             <div
@@ -88,10 +99,7 @@ function Sidebar({ currentPath, onNavigate }) {
                 }}
             >
                 <h4>{user?.name}</h4>
-
-                <small>
-                    {user?.roleName}
-                </small>
+                <small>{user?.roleName}</small>
             </div>
 
             <nav>

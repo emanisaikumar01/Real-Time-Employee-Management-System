@@ -121,23 +121,40 @@ function Tasks() {
 
             </div>
 
-            <div className="card-grid">
+            {tasks.length === 0 ? (
 
-                {tasks.map((task) => (
+                <div
+                    style={{
+                        textAlign: "center",
+                        padding: "40px",
+                    }}
+                >
+                    <h3>No Tasks Assigned</h3>
 
-                    <TaskCard
-                        key={task.id}
-                        task={task}
-                        onEdit={handleEdit}
-                        onDelete={handleDelete}
-                        onMarkComplete={
-                            handleMarkComplete
-                        }
-                    />
+                    <p>
+                        You currently do not have any assigned tasks.
+                    </p>
+                </div>
 
-                ))}
+            ) : (
 
-            </div>
+                <div className="card-grid">
+
+                    {tasks.map((task) => (
+
+                        <TaskCard
+                            key={task.id}
+                            task={task}
+                            onEdit={handleEdit}
+                            onDelete={handleDelete}
+                            onMarkComplete={handleMarkComplete}
+                        />
+
+                    ))}
+
+                </div>
+
+            )}
 
         </section>
     );
