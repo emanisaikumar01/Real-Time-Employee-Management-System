@@ -26,7 +26,7 @@ public class TaskService {
     }
 
     public List<TaskDTO> getAllTasks() {
-        return taskRepository.findAll()
+git         return taskRepository.findAll()
                 .stream()
                 .map(this::toDTO)
                 .toList();

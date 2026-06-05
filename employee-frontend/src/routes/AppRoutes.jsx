@@ -9,7 +9,8 @@ import LeaveRequests from "../pages/LeaveRequests";
 import Reports from "../pages/Reports";
 import Tasks from "../pages/Tasks";
 import Users from "../pages/Users";
-
+import NoticeBoard from "../pages/NoticeBoard";
+import Meetings from "../pages/Meetings";
 const routes = {
   "/": {
     component: Dashboard,
@@ -22,7 +23,17 @@ const routes = {
       "EMPLOYEE",
     ],
   },
-
+  "/meetings": {
+    component: Meetings,
+    roles: [
+      "CEO",
+      "HR",
+      "DIVISIONAL_HEAD",
+      "MANAGER",
+      "EXECUTIVE",
+      "EMPLOYEE",
+    ],
+  },
   "/users": {
     component: Users,
     roles: [
@@ -38,7 +49,17 @@ const routes = {
       "CEO",
     ],
   },
-
+  "/notice-board": {
+    component: NoticeBoard,
+    roles: [
+      "CEO",
+      "HR",
+      "DIVISIONAL_HEAD",
+      "MANAGER",
+      "EXECUTIVE",
+      "EMPLOYEE",
+    ],
+  },
   "/tasks": {
     component: Tasks,
     roles: [

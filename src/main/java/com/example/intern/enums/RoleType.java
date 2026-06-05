@@ -5,5 +5,6 @@ public enum RoleType {
     DIVISIONAL_HEAD,
     MANAGER,
     EMPLOYEE,
-    EXECUTIVE
+    EXECUTIVE,
+    HR
 }

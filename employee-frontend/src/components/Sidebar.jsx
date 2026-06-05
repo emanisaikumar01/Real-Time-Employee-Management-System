@@ -19,7 +19,7 @@ function Sidebar({ currentPath, onNavigate }) {
                 { label: "Tasks", path: "/tasks" },
                 { label: "Reports", path: "/reports" },
                 { label: "Leave Requests", path: "/leave-requests" },
-                { label: "Notice Board", path: "/notices" },
+                { label: "Notice Board", path: "/notice-board" },
                 { label: "Meetings", path: "/meetings" },
             ];
             break;
@@ -30,7 +30,7 @@ function Sidebar({ currentPath, onNavigate }) {
                 { label: "Users", path: "/users" },
                 { label: "Reports", path: "/reports" },
                 { label: "Leave Requests", path: "/leave-requests" },
-                { label: "Notice Board", path: "/notices" },
+                { label: "Notice Board", path: "/notice-board" },
                 { label: "Meetings", path: "/meetings" },
             ];
             break;
@@ -43,7 +43,7 @@ function Sidebar({ currentPath, onNavigate }) {
                 { label: "Reports", path: "/reports" },
                 { label: "Leave Requests", path: "/leave-requests" },
                 { label: "Meetings", path: "/meetings" },
-                { label: "Notice Board", path: "/notices" },
+                { label: "Notice Board", path: "/notice-board" },
             ];
             break;
 
@@ -54,7 +54,7 @@ function Sidebar({ currentPath, onNavigate }) {
                 { label: "Reports", path: "/reports" },
                 { label: "Leave Requests", path: "/leave-requests" },
                 { label: "Meetings", path: "/meetings" },
-                { label: "Notice Board", path: "/notices" },
+                { label: "Notice Board", path: "/notice-board" },
             ];
             break;
 
@@ -64,7 +64,7 @@ function Sidebar({ currentPath, onNavigate }) {
                 { label: "Tasks", path: "/tasks" },
                 { label: "Leave Requests", path: "/leave-requests" },
                 { label: "Meetings", path: "/meetings" },
-                { label: "Notice Board", path: "/notices" },
+                { label: "Notice Board", path: "/notice-board" },
             ];
             break;
 
@@ -74,7 +74,7 @@ function Sidebar({ currentPath, onNavigate }) {
                 { label: "Tasks", path: "/tasks" },
                 { label: "Leave Requests", path: "/leave-requests" },
                 { label: "Meetings", path: "/meetings" },
-                { label: "Notice Board", path: "/notices" },
+                { label: "Notice Board", path: "/notice-board" },
             ];
             break;
 

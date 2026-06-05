@@ -4,6 +4,7 @@ import { useAuth } from "../hooks/useAuth";
 import {
     getLeaveRequests,
     createLeaveRequest,
+    updateLeaveStatus,
 } from "../services/leaveRequestService";
 
 function LeaveRequests() {
@@ -28,6 +29,8 @@ function LeaveRequests() {
 
             const data = await getLeaveRequests();
 
+            console.log("Leave Data:", data);
+
             const list = Array.isArray(data)
                 ? data
                 : data.content || [];
@@ -49,15 +52,10 @@ function LeaveRequests() {
         try {
 
             await createLeaveRequest({
-
                 userId: user.id,
-
                 startDate: leaveData.startDate,
-
                 endDate: leaveData.endDate,
-
                 reason: leaveData.reason,
-
                 status: "PENDING",
             });
 
@@ -83,13 +81,36 @@ function LeaveRequests() {
         }
     };
 
+    const handleStatusUpdate = async (
+        id,
+        status
+    ) => {
+
+        try {
+
+            await updateLeaveStatus(
+                id,
+                status
+            );
+
+            loadLeaveRequests();
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert(
+                "Failed to update leave status"
+            );
+        }
+    };
+
     return (
         <section className="page-section">
 
             <div className="section-header">
 
                 <div>
-
                     <p className="eyebrow">
                         Approvals
                     </p>
@@ -97,7 +118,6 @@ function LeaveRequests() {
                     <h2>
                         Leave Requests
                     </h2>
-
                 </div>
 
                 {(role === "EMPLOYEE" ||
@@ -178,6 +198,16 @@ function LeaveRequests() {
                         My Leave Requests
                     </h3>
 
+                    {leaveRequests.filter(
+                        (leave) =>
+                            leave.userId ===
+                            user.id
+                    ).length === 0 && (
+                        <p>
+                            No leave requests found.
+                        </p>
+                    )}
+
                     {leaveRequests
                         .filter(
                             (leave) =>
@@ -198,37 +228,44 @@ function LeaveRequests() {
                                     <strong>
                                         From:
                                     </strong>{" "}
-                                    {
-                                        leave.startDate
-                                    }
+                                    {leave.startDate}
                                 </p>
 
                                 <p>
                                     <strong>
                                         To:
                                     </strong>{" "}
-                                    {
-                                        leave.endDate
-                                    }
+                                    {leave.endDate}
                                 </p>
 
                                 <p>
                                     <strong>
                                         Reason:
                                     </strong>{" "}
-                                    {
-                                        leave.reason
-                                    }
+                                    {leave.reason}
                                 </p>
 
                                 <p>
                                     <strong>
                                         Status:
                                     </strong>{" "}
-                                    {
-                                        leave.status
-                                    }
+                                    {leave.status}
                                 </p>
+
+                                {leave.status === "PENDING" && (
+
+                                    <button
+                                        onClick={() =>
+                                            handleStatusUpdate(
+                                                leave.id,
+                                                "CANCELLED"
+                                            )
+                                        }
+                                    >
+                                        Cancel
+                                    </button>
+
+                                )}
 
                                 <hr />
 
@@ -249,9 +286,81 @@ function LeaveRequests() {
                         Pending Leave Approvals
                     </h3>
 
-                    <p>
-                        Approval workflow coming next.
-                    </p>
+                    {leaveRequests
+                        .filter(
+                            (leave) =>
+                                leave.status ===
+                                "PENDING"
+                        )
+                        .map((leave) => (
+
+                            <div
+                                key={leave.id}
+                                style={{
+                                    marginBottom:
+                                        "15px",
+                                }}
+                            >
+
+                                <p>
+                                    <strong>
+                                        Employee:
+                                    </strong>{" "}
+                                    {leave.userName}
+                                </p>
+
+                                <p>
+                                    <strong>
+                                        From:
+                                    </strong>{" "}
+                                    {leave.startDate}
+                                </p>
+
+                                <p>
+                                    <strong>
+                                        To:
+                                    </strong>{" "}
+                                    {leave.endDate}
+                                </p>
+
+                                <p>
+                                    <strong>
+                                        Reason:
+                                    </strong>{" "}
+                                    {leave.reason}
+                                </p>
+
+                                <button
+                                    onClick={() =>
+                                        handleStatusUpdate(
+                                            leave.id,
+                                            "APPROVED"
+                                        )
+                                    }
+                                >
+                                    Approve
+                                </button>
+
+                                <button
+                                    style={{
+                                        marginLeft:
+                                            "10px",
+                                    }}
+                                    onClick={() =>
+                                        handleStatusUpdate(
+                                            leave.id,
+                                            "REJECTED"
+                                        )
+                                    }
+                                >
+                                    Reject
+                                </button>
+
+                                <hr />
+
+                            </div>
+
+                        ))}
 
                 </div>
 
@@ -263,12 +372,48 @@ function LeaveRequests() {
                 <div className="card">
 
                     <h3>
-                        Leave Requests
+                        All Leave Requests
                     </h3>
 
-                    <p>
-                        View-only access.
-                    </p>
+                    {leaveRequests.length === 0 ? (
+
+                        <p>
+                            No leave requests found.
+                        </p>
+
+                    ) : (
+
+                        leaveRequests.map((leave) => (
+
+                            <div
+                                key={leave.id}
+                                style={{
+                                    marginBottom:
+                                        "15px",
+                                }}
+                            >
+
+                                <p>
+                                    <strong>
+                                        Employee:
+                                    </strong>{" "}
+                                    {leave.userName}
+                                </p>
+
+                                <p>
+                                    <strong>
+                                        Status:
+                                    </strong>{" "}
+                                    {leave.status}
+                                </p>
+
+                                <hr />
+
+                            </div>
+
+                        ))
+
+                    )}
 
                 </div>
 

@@ -4,9 +4,12 @@ import com.example.intern.repository.DepartmentRepository;
 import com.example.intern.repository.LeaveRequestRepository;
 import com.example.intern.repository.TaskRepository;
 import com.example.intern.repository.UserRepository;
+
 import java.util.HashMap;
 import java.util.Map;
+
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,10 +39,29 @@ public class DashboardController {
 
         Map<String, Object> data = new HashMap<>();
 
-        data.put("totalUsers", userRepository.count());
-        data.put("totalTasks", taskRepository.count());
-        data.put("totalDepartments", departmentRepository.count());
-        data.put("totalLeaveRequests", leaveRequestRepository.count());
+        data.put("users", userRepository.count());
+        data.put("departments", departmentRepository.count());
+        data.put("tasks", taskRepository.count());
+        data.put("leaveRequests", leaveRequestRepository.count());
+
+        return data;
+    }
+
+    @GetMapping("/employee/{userId}")
+    public Map<String, Object> getEmployeeDashboard(
+            @PathVariable Long userId) {
+
+        Map<String, Object> data = new HashMap<>();
+
+        data.put(
+                "myTasks",
+                taskRepository.findByAssignedToId(userId).size()
+        );
+
+        data.put(
+                "myLeaves",
+                0
+        );
 
         return data;
     }
