@@ -4,7 +4,8 @@ import {
     getTasks,
     createTask,
     deleteTask,
-    updateTaskStatus
+    updateTaskStatus,
+    updateTask
 } from "../services/taskService";
 import { getUsers } from "../services/userService";
 
@@ -13,6 +14,7 @@ function Tasks() {
     const [tasks, setTasks] = useState([]);
     const [users, setUsers] = useState([]);
     const [showForm, setShowForm] = useState(false);
+    const [editingTask, setEditingTask] = useState(null);
 
     const [taskData, setTaskData] = useState({
         title: "",
@@ -26,6 +28,36 @@ function Tasks() {
     );
 
     const role = user?.roleName;
+    const assignableUsers = users.filter((u) => {
+
+        if (role === "CEO") {
+            return u.id !== user.id;
+        }
+
+        if (role === "DIVISIONAL_HEAD") {
+            return (
+                u.roleName === "MANAGER" ||
+                u.roleName === "EXECUTIVE" ||
+                u.roleName === "EMPLOYEE"
+            );
+        }
+
+        if (role === "MANAGER") {
+            return (
+                u.roleName === "EXECUTIVE" ||
+                u.roleName === "EMPLOYEE"
+            );
+        }
+
+        if (role === "HR") {
+            return (
+                u.roleName === "EXECUTIVE" ||
+                u.roleName === "EMPLOYEE"
+            );
+        }
+
+        return false;
+    });
 
     const loadTasks = async () => {
 
@@ -48,6 +80,7 @@ function Tasks() {
                         Number(user?.id)
                 );
             }
+            console.log(taskList);
 
             setTasks(taskList);
 
@@ -97,27 +130,36 @@ function Tasks() {
             return;
         }
         console.log("Logged User:", user);
-        console.log("Tasks:", taskList);
+        console.log("Tasks:", tasks);
 
         try {
 
-            await createTask({
+            if (editingTask) {
 
-                title: taskData.title,
+                await updateTask(
+                    editingTask.id,
+                    {
+                        title: taskData.title,
+                        description: taskData.description,
+                        assignedToId: Number(taskData.assignedToId),
+                        dueDate: taskData.dueDate,
+                    }
+                );
 
-                description: taskData.description,
+                alert("Task Updated Successfully");
 
-                assignedToId:
-                    Number(taskData.assignedToId),
+            } else {
 
-                assignedById:
-                    Number(user.id),
+                await createTask({
+                    title: taskData.title,
+                    description: taskData.description,
+                    assignedToId: Number(taskData.assignedToId),
+                    assignedById: Number(user.id),
+                    dueDate: taskData.dueDate,
+                });
 
-                dueDate:
-                taskData.dueDate,
-            });
-
-            alert("Task Created Successfully");
+                alert("Task Created Successfully");
+            }
 
             setTaskData({
                 title: "",
@@ -125,6 +167,8 @@ function Tasks() {
                 assignedToId: "",
                 dueDate: "",
             });
+
+            setEditingTask(null);
 
             setShowForm(false);
 
@@ -134,7 +178,11 @@ function Tasks() {
 
             console.error(error);
 
-            alert("Failed to create task");
+            alert(
+                editingTask
+                    ? "Failed to update task"
+                    : "Failed to create task"
+            );
         }
     };
 
@@ -156,9 +204,16 @@ function Tasks() {
 
     const handleEdit = (task) => {
 
-        console.log(task);
+        setEditingTask(task);
 
-        alert("Edit feature coming next");
+        setTaskData({
+            title: task.title,
+            description: task.description,
+            assignedToId: task.assignedToId,
+            dueDate: task.dueDate,
+        });
+
+        setShowForm(true);
     };
 
     const handleMarkComplete = async (id) => {
@@ -220,7 +275,9 @@ function Tasks() {
                 <div className="card">
 
                     <h3>
-                        Create Task
+                        {editingTask
+                            ? "Edit Task"
+                            : "Create Task"}
                     </h3>
 
                     <input
@@ -262,7 +319,7 @@ function Tasks() {
                             Select Employee
                         </option>
 
-                        {users.map((u) => (
+                        {assignableUsers.map((u) => (
 
                             <option
                                 key={u.id}
@@ -289,12 +346,10 @@ function Tasks() {
                         }
                     />
 
-                    <button
-                        onClick={
-                            handleCreateTask
-                        }
-                    >
-                        Assign Task
+                    <button onClick={handleCreateTask}>
+                        {editingTask
+                            ? "Update Task"
+                            : "Assign Task"}
                     </button>
 
                 </div>

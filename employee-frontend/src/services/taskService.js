@@ -13,6 +13,14 @@ export async function createTask(task) {
 
   return response.data;
 }
+export async function updateTask(id, task) {
+  const response = await api.put(
+      `/tasks/${id}`,
+      task
+  );
+
+  return response.data;
+}
 
 export async function deleteTask(id) {
   return await api.delete(
