@@ -27,6 +27,7 @@ public class RoleDuty {
     public RoleDuty() {
     }
 
+
     public RoleDuty(Long id, Role role, Duty duty) {
         this.id = id;
         this.role = role;
